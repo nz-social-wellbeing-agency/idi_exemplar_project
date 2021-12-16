@@ -1,0 +1,4 @@
+random_round_rr3.xlsm
+RR3 Checking Macro.xlsm
+
+These files were created by, and belong to, Stats NZ.
