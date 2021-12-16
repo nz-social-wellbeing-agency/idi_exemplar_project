@@ -10,11 +10,11 @@ Conclusion:
 */
 
 /* table of meshblock codes for reuse */
-DROP TABLE IF EXISTS [IDI_Sandpit].[DL-MAA2020-01].[tmp_MB_list]
+DROP TABLE IF EXISTS [IDI_Sandpit].[DL-MAA20XX-YY].[tmp_MB_list]
 GO
 
 SELECT DISTINCT ant_meshblock_code
-INTO [IDI_Sandpit].[DL-MAA2020-01].[tmp_MB_list]
+INTO [IDI_Sandpit].[DL-MAA20XX-YY].[tmp_MB_list]
 FROM [IDI_Clean_20201020].[data].[address_notification]
 WHERE '2020-06-30' BETWEEN [ant_notification_date] AND [ant_replacement_date]
 AND [ant_meshblock_code] IS NOT NULL;
@@ -27,7 +27,7 @@ SELECT CASE
 	WHEN a.[ant_meshblock_code] IS NULL THEN 'c only'
 	WHEN c.[MB2019_code] IS NULL THEN 'a only'
 	ELSE 'both' END AS match_type_2019
-FROM [IDI_Sandpit].[DL-MAA2020-01].[tmp_MB_list] AS a
+FROM [IDI_Sandpit].[DL-MAA20XX-YY].[tmp_MB_list] AS a
 FULL OUTER JOIN [IDI_Metadata].[clean_read_CLASSIFICATIONS].[meshblock_concordance_2019] AS c
 ON c.[MB2019_code] = a.[ant_meshblock_code]
 
@@ -42,7 +42,7 @@ SELECT CASE
 	WHEN a.[ant_meshblock_code] IS NULL THEN 'c only'
 	WHEN c.MB2018_code IS NULL THEN 'a only'
 	ELSE 'both' END AS match_type_2018
-FROM [IDI_Sandpit].[DL-MAA2020-01].[tmp_MB_list] AS a
+FROM [IDI_Sandpit].[DL-MAA20XX-YY].[tmp_MB_list] AS a
 FULL OUTER JOIN [IDI_Metadata].[clean_read_CLASSIFICATIONS].[meshblock_concordance_2019] AS c
 ON c.MB2018_code = a.[ant_meshblock_code]
 
@@ -57,7 +57,7 @@ SELECT CASE
 	WHEN a.[ant_meshblock_code] IS NULL THEN 'c only'
 	WHEN c.MB2017_code IS NULL THEN 'a only'
 	ELSE 'both' END AS match_type_2017
-FROM [IDI_Sandpit].[DL-MAA2020-01].[tmp_MB_list] AS a
+FROM [IDI_Sandpit].[DL-MAA20XX-YY].[tmp_MB_list] AS a
 FULL OUTER JOIN [IDI_Metadata].[clean_read_CLASSIFICATIONS].[meshblock_concordance_2019] AS c
 ON c.MB2017_code = a.[ant_meshblock_code]
 
@@ -72,7 +72,7 @@ SELECT CASE
 	WHEN a.[ant_meshblock_code] IS NULL THEN 'c only'
 	WHEN c.MB2016_code IS NULL THEN 'a only'
 	ELSE 'both' END AS match_type_2016
-FROM [IDI_Sandpit].[DL-MAA2020-01].[tmp_MB_list] AS a
+FROM [IDI_Sandpit].[DL-MAA20XX-YY].[tmp_MB_list] AS a
 FULL OUTER JOIN [IDI_Metadata].[clean_read_CLASSIFICATIONS].[meshblock_concordance_2019] AS c
 ON c.MB2016_code = a.[ant_meshblock_code]
 
@@ -87,7 +87,7 @@ SELECT CASE
 	WHEN a.[ant_meshblock_code] IS NULL THEN 'c only'
 	WHEN c.census_meshblock_code IS NULL THEN 'a only'
 	ELSE 'both' END AS match_type_census
-FROM [IDI_Sandpit].[DL-MAA2020-01].[tmp_MB_list] AS a
+FROM [IDI_Sandpit].[DL-MAA20XX-YY].[tmp_MB_list] AS a
 FULL OUTER JOIN [IDI_Metadata].[clean_read_CLASSIFICATIONS].[meshblock_concordance_2019] AS c
 ON c.census_meshblock_code = a.[ant_meshblock_code]
 
@@ -102,7 +102,7 @@ SELECT CASE
 	WHEN a.[ant_meshblock_code] IS NULL THEN 'c only'
 	WHEN c.meshblock_code IS NULL THEN 'a only'
 	ELSE 'both' END AS match_type_lead
-FROM [IDI_Sandpit].[DL-MAA2020-01].[tmp_MB_list] AS a
+FROM [IDI_Sandpit].[DL-MAA20XX-YY].[tmp_MB_list] AS a
 FULL OUTER JOIN [IDI_Metadata].[clean_read_CLASSIFICATIONS].[meshblock_concordance_2019] AS c
 ON c.meshblock_code = a.[ant_meshblock_code]
 
@@ -111,5 +111,5 @@ GROUP BY match_type_lead
 
 /* tidy up */
 /* table of meshblock codes for reuse */
-DROP TABLE IF EXISTS [IDI_Sandpit].[DL-MAA2020-01].[tmp_MB_list]
+DROP TABLE IF EXISTS [IDI_Sandpit].[DL-MAA20XX-YY].[tmp_MB_list]
 GO

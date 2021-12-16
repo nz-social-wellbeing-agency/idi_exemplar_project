@@ -2,13 +2,13 @@
 Title: Assemble research dataset for exemplar project
 
 Inputs & Dependencies:
-- "residential_population_2020.sql" --> [IDI_UserCode].[DL-MAA2020-01].[defn_residents]
+- "residential_population_2020.sql" --> [IDI_UserCode].[DL-MAA20XX-YY].[defn_residents]
 - [IDI_Clean_20201020].[data].[personal_detail]
-- "address_descriptors.sql" --> [IDI_Sandpit].[DL-MAA2020-01].[defn_address_descriptors]
-- "annual_taxable_income.sql" --> [IDI_UserCode].[DL-MAA2020-01].[defn_annual_taxable_income]
+- "address_descriptors.sql" --> [IDI_Sandpit].[DL-MAA20XX-YY].[defn_address_descriptors]
+- "annual_taxable_income.sql" --> [IDI_UserCode].[DL-MAA20XX-YY].[defn_annual_taxable_income]
 
 Outputs:
-- [IDI_Sandpit].[DL-MAA2020-01].[exemplar_rectangular]
+- [IDI_Sandpit].[DL-MAA20XX-YY].[exemplar_rectangular]
 
 Notes:
 - This assembly has been designed to be equivalent to the output produced be the Dataset Assembly Tool
@@ -19,7 +19,7 @@ History (reverse order):
 **************************************************************************************************/
 
 /* remove table before recreating */
-DROP TABLE IF EXISTS [IDI_Sandpit].[DL-MAA2020-01].[exemplar_rectangular];
+DROP TABLE IF EXISTS [IDI_Sandpit].[DL-MAA20XX-YY].[exemplar_rectangular];
 GO
 
 /* assemble data together */
@@ -53,13 +53,13 @@ SELECT r.snz_uid AS identity_column
 	,MAX(a.[SA22018_V1_00]) AS SA2
 	/* income */
 	,SUM(i.[inc_cal_yr_tot_yr_amt]) AS total_taxable_income
-INTO [IDI_Sandpit].[DL-MAA2020-01].[exemplar_rectangular]
-FROM [IDI_UserCode].[DL-MAA2020-01].[defn_residents] AS r
+INTO [IDI_Sandpit].[DL-MAA20XX-YY].[exemplar_rectangular]
+FROM [IDI_UserCode].[DL-MAA20XX-YY].[defn_residents] AS r
 LEFT JOIN [IDI_Clean_20201020].[data].[personal_detail] AS p
 ON r.snz_uid = p.snz_uid
-LEFT JOIN [IDI_Sandpit].[DL-MAA2020-01].[defn_address_descriptors] AS a
+LEFT JOIN [IDI_Sandpit].[DL-MAA20XX-YY].[defn_address_descriptors] AS a
 ON r.snz_uid = a.snz_uid
-LEFT JOIN [IDI_UserCode].[DL-MAA2020-01].[defn_annual_taxable_income] AS i
+LEFT JOIN [IDI_UserCode].[DL-MAA20XX-YY].[defn_annual_taxable_income] AS i
 ON r.snz_uid = i.snz_uid
 AND i.year_start <= '2020-12-31'
 AND '2020-01-01' <= i.year_end
@@ -67,8 +67,8 @@ GROUP BY r.snz_uid
 GO
 
 /* index */
-CREATE NONCLUSTERED INDEX my_index_name ON [IDI_Sandpit].[DL-MAA2020-01].[exemplar_rectangular] (identity_column);
+CREATE NONCLUSTERED INDEX my_index_name ON [IDI_Sandpit].[DL-MAA20XX-YY].[exemplar_rectangular] (identity_column);
 GO
 /* compress */
-ALTER TABLE [IDI_Sandpit].[DL-MAA2020-01].[exemplar_rectangular] REBUILD PARTITION = ALL WITH (DATA_COMPRESSION = PAGE);
+ALTER TABLE [IDI_Sandpit].[DL-MAA20XX-YY].[exemplar_rectangular] REBUILD PARTITION = ALL WITH (DATA_COMPRESSION = PAGE);
 GO

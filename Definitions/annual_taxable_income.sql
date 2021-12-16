@@ -4,7 +4,7 @@ Title: 2020 Annual Taxable Income
 Inputs & Dependencies:
 - [IDI_Clean].[data].[income_cal_yr]
 Outputs:
-- [IDI_UserCode].[DL-MAA2020-01].[defn_annual_taxable_income]
+- [IDI_UserCode].[DL-MAA20XX-YY].[defn_annual_taxable_income]
 
 Description:
 Annual taxable income for calendar years.
@@ -20,7 +20,7 @@ Notes:
 Parameters & Present values:
   Current refresh = 20201020
   Prefix = defn_
-  Project schema = [DL-MAA2020-01]
+  Project schema = [DL-MAA20XX-YY]
    
 Issues:
  
@@ -33,11 +33,11 @@ USE IDI_UserCode
 GO
 
 /* Remove view before recreating */
-DROP VIEW IF EXISTS [DL-MAA2020-01].[defn_annual_taxable_income];
+DROP VIEW IF EXISTS [DL-MAA20XX-YY].[defn_annual_taxable_income];
 GO
 
 /* Create definition of 2020 residential population */
-CREATE VIEW [DL-MAA2020-01].[defn_annual_taxable_income] AS
+CREATE VIEW [DL-MAA20XX-YY].[defn_annual_taxable_income] AS
 SELECT [inc_cal_yr_year_nbr]
       ,[snz_uid]
       ,[snz_ird_uid]

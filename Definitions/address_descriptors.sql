@@ -6,7 +6,7 @@ Inputs & Dependencies:
 - [IDI_Metadata].[clean_read_CLASSIFICATIONS].[meshblock_concordance_2019]
 - [IDI_Metadata].[clean_read_CLASSIFICATIONS].[meshblock_current_higher_geography]
 Outputs:
-- [IDI_Sandpit].[DL-MAA2020-01].[defn_address_descriptors]
+- [IDI_Sandpit].[DL-MAA20XX-YY].[defn_address_descriptors]
 
 Description:
 Summary description of a person's neighbourhood including: region, SA2, and urban/rural.
@@ -34,7 +34,7 @@ Notes:
 Parameters & Present values:
   Current refresh = 20201020
   Prefix = defn_
-  Project schema = [DL-MAA2020-01]
+  Project schema = [DL-MAA20XX-YY]
   Current 'as-at' date = 2020-06-30
    
 Issues:
@@ -44,7 +44,7 @@ History (reverse order):
 **************************************************************************************************/
 
 /* Remove table before (re)creating */
-DROP TABLE IF EXISTS [IDI_Sandpit].[DL-MAA2020-01].[defn_address_descriptors];
+DROP TABLE IF EXISTS [IDI_Sandpit].[DL-MAA20XX-YY].[defn_address_descriptors];
 GO
 
 /* Create address table for specific date */
@@ -57,7 +57,7 @@ SELECT a.[snz_uid]
       ,b.[IUR2018_V1_00_NAME]
 	  ,CAST(b.[SA22018_V1_00] AS INT) AS [SA22018_V1_00] -- Statistical Area 2 (neighbourhood)
 	  ,b.[SA22018_V1_00_NAME]
-INTO [IDI_Sandpit].[DL-MAA2020-01].[defn_address_descriptors]
+INTO [IDI_Sandpit].[DL-MAA20XX-YY].[defn_address_descriptors]
 FROM [IDI_Clean_20201020].[data].[address_notification] AS a
 INNER JOIN [IDI_Metadata].[clean_read_CLASSIFICATIONS].[meshblock_concordance_2019] AS conc
 ON conc.[MB2019_code] = a.[ant_meshblock_code]
@@ -68,9 +68,9 @@ AND a.[ant_meshblock_code] IS NOT NULL
 GO
 
 /* Add index */
-CREATE NONCLUSTERED INDEX my_index_name ON [IDI_Sandpit].[DL-MAA2020-01].[defn_address_descriptors] (snz_uid);
+CREATE NONCLUSTERED INDEX my_index_name ON [IDI_Sandpit].[DL-MAA20XX-YY].[defn_address_descriptors] (snz_uid);
 GO
 
 /* Compress final table to save space */
-ALTER TABLE [IDI_Sandpit].[DL-MAA2020-01].[defn_address_descriptors] REBUILD PARTITION = ALL WITH (DATA_COMPRESSION = PAGE);
+ALTER TABLE [IDI_Sandpit].[DL-MAA20XX-YY].[defn_address_descriptors] REBUILD PARTITION = ALL WITH (DATA_COMPRESSION = PAGE);
 GO

@@ -22,21 +22,21 @@
 ## USER CONTROLS START ----------------------------------------------------------------------------
 
 # file paths
-ABSOLUTE_PATH_TO_TOOL <- "~/Network-Shares/DataLabNas/MAA/MAA2016-15 Supporting the Social Investment Unit/Exemplar project/Tools"
-ABSOLUTE_PATH_TO_ANALYSIS <- "~/Network-Shares/DataLabNas/MAA/MAA2016-15 Supporting the Social Investment Unit/Exemplar project/Analysis"
+ABSOLUTE_PATH_TO_TOOL <- "~/Network-Shares/DataLabNas/MAA/MAA20XX-YY/Exemplar project/Tools/Dataset Assembly Tool"
+ABSOLUTE_PATH_TO_ANALYSIS <- "~/Network-Shares/DataLabNas/MAA/MAA20XX-YY/Exemplar project/Analysis"
 POPULATION_FILE <- "population_and_period.xlsx"
 MEASURES_FILE <- "measures.xlsx"
 
 # outputs
 OUTPUT_DATABASE <- "[IDI_Sandpit]"
-OUTPUT_SCHEMA <- "[DL-MAA2020-01]"
-LONG_THIN_TABLE_NAME <- "[tmp_assembled_data]"
+OUTPUT_SCHEMA <- "[DL-MAA20XX-YY]"
+LONG_THIN_TABLE_NAME <- "[exemplar_assembled_data]"
 RECTANGULAR_TABLE_NAME <- "[exemplar_rectangular]"
 
 OVERWRITE_EXISTING_TABLES <- TRUE # {FALSE will append to LONG_THIN_TABLE but RECTANGULAR_TABLE must not exist}
 
 # controls
-DEVELOPMENT_MODE <- FALSE # {TRUE for testing, FALSE for production}
+DEVELOPMENT_MODE <- TRUE # {TRUE for testing, FALSE for production}
 RUN_CHECKS_ONLY <- FALSE # {TRUE for testing inputs without assembly}
 INFO_TO_PRINT_TO_CONSOLE <- "details" # {"all", "details", "heading", "none", "default"}
 

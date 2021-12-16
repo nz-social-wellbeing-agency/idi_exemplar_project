@@ -21,11 +21,11 @@
 ## parameters -------------------------------------------------------------------------------------
 
 # locations
-ABSOLUTE_PATH_TO_TOOL <- "~/Network-Shares/DataLabNas/MAA/MAA2016-15 Supporting the Social Investment Unit/Exemplar project/Tools/Dataset Assembly Tool"
-ABSOLUTE_PATH_TO_ANALYSIS <- "~/Network-Shares/DataLabNas/MAA/MAA2016-15 Supporting the Social Investment Unit/Exemplar project/Analysis"
+ABSOLUTE_PATH_TO_TOOL <- "~/Network-Shares/DataLabNas/MAA/MAA20XX-YY/Exemplar project/Tools/Dataset Assembly Tool"
+ABSOLUTE_PATH_TO_ANALYSIS <- "~/Network-Shares/DataLabNas/MAA/MAA20XX-YY/Exemplar project/Analysis"
 SANDPIT = "[IDI_Sandpit]"
 USERCODE = "[IDI_UserCode]"
-OUR_SCHEMA = "[DL-MAA2020-01]"
+OUR_SCHEMA = "[DL-MAA20XX-YY]"
 
 # inputs
 TIDY_TABLE = "[exemplar_tidy]"

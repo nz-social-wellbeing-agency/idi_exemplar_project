@@ -2,10 +2,10 @@
 Title: Assemble research dataset for exemplar project
 
 Inputs & Dependencies:
-- [IDI_Sandpit].[DL-MAA2020-01].[exemplar_rectangular]
+- [IDI_Sandpit].[DL-MAA20XX-YY].[exemplar_rectangular]
 
 Outputs:
-- [IDI_Sandpit].[DL-MAA2020-01].[exemplar_tidy]
+- [IDI_Sandpit].[DL-MAA20XX-YY].[exemplar_tidy]
 
 Notes:
 - This tidy script has been desgined to be equivalent to the R tidy_variables script.
@@ -15,7 +15,7 @@ History (reverse order):
 **************************************************************************************************/
 
 /* remove table before recreating */
-DROP TABLE IF EXISTS [IDI_Sandpit].[DL-MAA2020-01].[exemplar_tidy];
+DROP TABLE IF EXISTS [IDI_Sandpit].[DL-MAA20XX-YY].[exemplar_tidy];
 GO
 
 /* assemble data together */
@@ -67,14 +67,14 @@ SELECT identity_column
 	,eth_pacific
 	,region
 	,SA2
-INTO [IDI_Sandpit].[DL-MAA2020-01].[exemplar_tidy]
-FROM [IDI_Sandpit].[DL-MAA2020-01].[exemplar_rectangular]
+INTO [IDI_Sandpit].[DL-MAA20XX-YY].[exemplar_tidy]
+FROM [IDI_Sandpit].[DL-MAA20XX-YY].[exemplar_rectangular]
 WHERE region IS NOT NULL
 GO
 
 /* index */
-CREATE NONCLUSTERED INDEX my_index_name ON [IDI_Sandpit].[DL-MAA2020-01].[exemplar_tidy] (identity_column);
+CREATE NONCLUSTERED INDEX my_index_name ON [IDI_Sandpit].[DL-MAA20XX-YY].[exemplar_tidy] (identity_column);
 GO
 /* compress */
-ALTER TABLE [IDI_Sandpit].[DL-MAA2020-01].[exemplar_tidy] REBUILD PARTITION = ALL WITH (DATA_COMPRESSION = PAGE);
+ALTER TABLE [IDI_Sandpit].[DL-MAA20XX-YY].[exemplar_tidy] REBUILD PARTITION = ALL WITH (DATA_COMPRESSION = PAGE);
 GO
