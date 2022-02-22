@@ -112,12 +112,6 @@ working_table = working_table %>%
   # drop unrequired columns
   select(-label_identity, -summary_period_start_date, -summary_period_end_date, -label_summary_period)
 
-## review tidied dataset --------------------------------------------------------------------------
-
-run_time_inform_user("summary report on tidied data", context = "heading", print_level = VERBOSE)
-explore_report(working_table, id_column = "identity_column", output_file = "clean_table_report")
-run_time_inform_user("summary report complete", context = "details", print_level = VERBOSE)
-
 ## write for output -------------------------------------------------------------------------------
 
 run_time_inform_user("saving output table", context = "heading", print_level = VERBOSE)
@@ -128,6 +122,14 @@ create_nonclustered_index(db_con, SANDPIT, OUR_SCHEMA, TIDY_TABLE, "identity_col
 # compressd
 run_time_inform_user("compressing", context = "details", print_level = VERBOSE)
 compress_table(db_con, SANDPIT, OUR_SCHEMA, TIDY_TABLE)
+
+## review tidied dataset --------------------------------------------------------------------------
+
+run_time_inform_user("summary report on tidied data", context = "heading", print_level = VERBOSE)
+explore_report(working_table, id_column = "identity_column", output_file = "clean_table_report")
+run_time_inform_user("summary report complete", context = "details", print_level = VERBOSE)
+
+## conclude ---------------------------------------------------------------------------------------
 
 # close connection
 close_database_connection(db_con)
