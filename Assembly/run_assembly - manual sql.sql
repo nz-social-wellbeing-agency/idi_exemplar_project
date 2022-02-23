@@ -40,17 +40,17 @@ SELECT r.snz_uid AS identity_column
 	,MAX(IIF(p.[snz_sex_gender_code] = 2, 1, NULL)) AS [sex_code=2]
 	,MAX(IIF(p.[snz_sex_gender_code] = '', 1, NULL)) AS [sex_code=]
 	/* address */
-	,MAX(IIF(a.[IUR2018_V1_00_NAME] = 'Inland water', 1, NULL)) AS [urbal_rural=Inland water]
-	,MAX(IIF(a.[IUR2018_V1_00_NAME] = 'Inlet', 1, NULL)) AS [urbal_rural=Inlet]
-	,MAX(IIF(a.[IUR2018_V1_00_NAME] = 'Large urban area', 1, NULL)) AS [urbal_rural=Large urban area]
-	,MAX(IIF(a.[IUR2018_V1_00_NAME] = 'Major urban area', 1, NULL)) AS [urbal_rural=Major urban area]
-	,MAX(IIF(a.[IUR2018_V1_00_NAME] = 'Medium urban area', 1, NULL)) AS [urbal_rural=Medium urban area]
-	,MAX(IIF(a.[IUR2018_V1_00_NAME] = 'Oceanic', 1, NULL)) AS [urbal_rural=Oceanic]
-	,MAX(IIF(a.[IUR2018_V1_00_NAME] = 'Rural other', 1, NULL)) AS [urbal_rural=Rural other]
-	,MAX(IIF(a.[IUR2018_V1_00_NAME] = 'Rural settlement', 1, NULL)) AS [urbal_rural=Rural settlement]
-	,MAX(IIF(a.[IUR2018_V1_00_NAME] = 'Small urban area', 1, NULL)) AS [urbal_rural=Small urban area]
+	,MAX(IIF(a.[IUR2020_V1_00_NAME] = 'Inland water', 1, NULL)) AS [urbal_rural=Inland water]
+	,MAX(IIF(a.[IUR2020_V1_00_NAME] = 'Inlet', 1, NULL)) AS [urbal_rural=Inlet]
+	,MAX(IIF(a.[IUR2020_V1_00_NAME] = 'Large urban area', 1, NULL)) AS [urbal_rural=Large urban area]
+	,MAX(IIF(a.[IUR2020_V1_00_NAME] = 'Major urban area', 1, NULL)) AS [urbal_rural=Major urban area]
+	,MAX(IIF(a.[IUR2020_V1_00_NAME] = 'Medium urban area', 1, NULL)) AS [urbal_rural=Medium urban area]
+	,MAX(IIF(a.[IUR2020_V1_00_NAME] = 'Oceanic', 1, NULL)) AS [urbal_rural=Oceanic]
+	,MAX(IIF(a.[IUR2020_V1_00_NAME] = 'Rural other', 1, NULL)) AS [urbal_rural=Rural other]
+	,MAX(IIF(a.[IUR2020_V1_00_NAME] = 'Rural settlement', 1, NULL)) AS [urbal_rural=Rural settlement]
+	,MAX(IIF(a.[IUR2020_V1_00_NAME] = 'Small urban area', 1, NULL)) AS [urbal_rural=Small urban area]
 	,MAX(a.[ant_region_code]) AS region
-	,MAX(a.[SA22018_V1_00]) AS SA2
+	,MAX(a.[SA22020_V1_00]) AS SA2
 	/* income */
 	,SUM(i.[inc_cal_yr_tot_yr_amt]) AS total_taxable_income
 INTO [IDI_Sandpit].[DL-MAA20XX-YY].[exemplar_rectangular]

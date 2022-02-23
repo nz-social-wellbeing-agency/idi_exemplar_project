@@ -23,7 +23,7 @@ Notes:
 
 2) The year of the meshblock codes used for the address notification could not be found in data documentation.
 	The quality of several different years/joins were tried the final choice represents the best join available
-	at time of creation: 2018.
+	at time of creation.
 	Another cause for this join being imperfect is not every meshblock contains residential addresses (e.g. some
 	CBD areas may contain hotels but not residential addresses, and some meshblocks are uninhabited - such as 
 	mountains or ocean areas).
@@ -53,16 +53,16 @@ SELECT a.[snz_uid]
       ,a.[ant_replacement_date]
       ,a.[snz_idi_address_register_uid]
 	  ,CAST(a.[ant_region_code] AS INT) AS [ant_region_code]
-	  ,b.[IUR2018_V1_00] -- urban/rural classification
-      ,b.[IUR2018_V1_00_NAME]
-	  ,CAST(b.[SA22018_V1_00] AS INT) AS [SA22018_V1_00] -- Statistical Area 2 (neighbourhood)
-	  ,b.[SA22018_V1_00_NAME]
+	  ,b.[IUR2020_V1_00] -- urban/rural classification
+      ,b.[IUR2020_V1_00_NAME]
+	  ,CAST(b.[SA22020_V1_00] AS INT) AS [SA22020_V1_00] -- Statistical Area 2 (neighbourhood)
+	  ,b.[SA22020_V1_00_NAME]
 INTO [IDI_Sandpit].[DL-MAA20XX-YY].[defn_address_descriptors]
 FROM [IDI_Clean_20201020].[data].[address_notification] AS a
 INNER JOIN [IDI_Metadata].[clean_read_CLASSIFICATIONS].[meshblock_concordance_2019] AS conc
 ON conc.[MB2019_code] = a.[ant_meshblock_code]
-LEFT JOIN [IDI_Metadata].[clean_read_CLASSIFICATIONS].[meshblock_current_higher_geography] AS b
-ON conc.[MB2018_code] = b.[MB2018_V1_00]
+LEFT JOIN [IDI_Metadata].[clean_read_CLASSIFICATIONS].[meshblock_current_higher_geography_2020_V1_00] AS b
+ON conc.[MB2018_code] = b.[MB2020_V1_00]
 WHERE '2020-06-30' BETWEEN [ant_notification_date] AND [ant_replacement_date] -- at 2020-06-30
 AND a.[ant_meshblock_code] IS NOT NULL
 GO
