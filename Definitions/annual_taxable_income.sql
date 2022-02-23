@@ -36,7 +36,7 @@ GO
 DROP VIEW IF EXISTS [DL-MAA20XX-YY].[defn_annual_taxable_income];
 GO
 
-/* Create definition of 2020 residential population */
+/* Create definition of taxible income */
 CREATE VIEW [DL-MAA20XX-YY].[defn_annual_taxable_income] AS
 SELECT [inc_cal_yr_year_nbr]
       ,[snz_uid]
