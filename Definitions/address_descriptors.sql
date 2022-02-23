@@ -61,7 +61,7 @@ INTO [IDI_Sandpit].[DL-MAA20XX-YY].[defn_address_descriptors]
 FROM [IDI_Clean_20201020].[data].[address_notification] AS a
 INNER JOIN [IDI_Metadata].[clean_read_CLASSIFICATIONS].[meshblock_concordance_2019] AS conc
 ON conc.[MB2019_code] = a.[ant_meshblock_code]
-LEFT JOIN [IDI_Metadata].[clean_read_CLASSIFICATIONS].[meshblock_current_higher_geography_2020_V1_00] AS b
+LEFT JOIN [IDI_Metadata].[clean_read_CLASSIFICATIONS].[meshblock_higher_geography_2020_V1_00] AS b
 ON conc.[MB2018_code] = b.[MB2020_V1_00]
 WHERE '2020-06-30' BETWEEN [ant_notification_date] AND [ant_replacement_date] -- at 2020-06-30
 AND a.[ant_meshblock_code] IS NOT NULL
