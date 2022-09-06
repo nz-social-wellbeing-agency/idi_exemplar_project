@@ -31,8 +31,6 @@ OUR_SCHEMA = "[DL-MAA20XX-YY]"
 TIDY_TABLE = "[exemplar_tidy]"
 # outputs
 OUTPUT_FOLDER = "../Output/"
-SUMMARY_FILE = "summarised_results.xlsx"
-CONFIDENTIALISED_FILE = "confidentialised_results.xlsx"
 
 # controls
 DEVELOPMENT_MODE = FALSE
