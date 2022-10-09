@@ -26,9 +26,9 @@
 ## setup ------------------------------------------------------------------------------------------
 
 # confirm working directory
-ABSOLUTE_PATH_TO_TOOL <- "~/Network-Shares/DataLabNas/MAA/MAA20XX-YY/Exemplar project/Tools/Dataset Assembly Tool"
+ABSOLUTE_PATH_TO_TOOL <- "~/Path/To/Folder/Containing/Assembly/Tool/R/Files"
 # confirm project schema
-our_schema <- "[DL-MAA20XX-YY]"
+our_schema <- "[DL-MAA20YY-XX]"
 
 setwd(ABSOLUTE_PATH_TO_TOOL)
 our_db <- "[IDI_Sandpit]"
@@ -45,6 +45,7 @@ source("general_assembly_tool_functions.R")
 source("general_assembly_tool.R")
 source("overview_dataset.R")
 source("summary_confidential.R")
+source("check_confidentiality.R")
 testthat::test_dir("./tests")
 
 ## test in sections -------------------------------------------------------------------------------
@@ -84,7 +85,7 @@ if (FALSE) {
   source("general_assembly_tool.R")
   testthat::test_file("./tests/test_GAT_function_handling.R")
   testthat::test_file("./tests/test_GAT_integration.R")
-
+  
   # test generating overview of datasets
   source("overview_dataset.R")
   testthat::test_file("./tests/test_OD_filter.R")
@@ -95,6 +96,10 @@ if (FALSE) {
   testthat::test_file("./tests/test_SC_support_functions.R")
   testthat::test_file("./tests/test_SC_summarise.R")
   testthat::test_file("./tests/test_SC_confidentialise.R")
+  
+  # test checking of output
+  source("check_confidentiality.R")
+  testthat::test_file("./tests/test_CC_checks.R")
 }
 
 ## tidy up ----------------------------------------------------------------------------------------

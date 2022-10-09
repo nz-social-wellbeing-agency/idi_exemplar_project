@@ -17,6 +17,8 @@
 #' Issues:
 #'
 #' History (reverse order):
+#' 2022-08-23 SA stable RR3 handles column order
+#' 2022-05-20 SA cross product improved
 #' 2021-08-18 SA v0
 #' ############################################################################
 
@@ -33,7 +35,7 @@
 #' Note: dplyr::group_by requires no duplicates so turning this off
 #' may produce errors if the output is used for summarising results.
 #' 
-#' drop.dupes.across control whether duplicate sets of paramters are discarded.
+#' drop.dupes.across control whether duplicate sets of parameters are discarded.
 #' For example: (a,b,c) and (a,c,b) will only output (a,b,c)
 #' 
 #' For example: always = (a,b,c), grp1 = (d,e), grp2 = (f,g)
@@ -213,9 +215,12 @@ summarise_and_label <- function(df,
   if(make_distinct){
     tmp_df = df %>%
       dplyr::filter(!is.na(!!sym(summarise_col))) %>%
-      dplyr::summarise(distinct = dplyr::n_distinct(!!sym(summarise_col)))
+      dplyr::summarise(distinct = dplyr::n_distinct(!!sym(summarise_col)), .groups = "drop")
     
-    save_to_sql(tmp_df %>% dbplyr::sql_render() %>% as.character(), "make distinct")
+    # output query if relevant
+    if("tbl_sql" %in% class(tmp_df)){
+      save_to_sql(tmp_df %>% dbplyr::sql_render() %>% as.character(), "make distinct")
+    }
     
     output_df = tmp_df %>%
       dplyr::collect() %>%
@@ -224,9 +229,12 @@ summarise_and_label <- function(df,
   
   if(make_count){
     tmp_df = df %>%
-      dplyr::summarise(count = sum(ifelse(is.na(!!sym(summarise_col)), 0, 1), na.rm = TRUE))
+      dplyr::summarise(count = sum(ifelse(is.na(!!sym(summarise_col)), 0, 1), na.rm = TRUE), .groups = "drop")
     
-    save_to_sql(tmp_df %>% dbplyr::sql_render() %>% as.character(), "make count")
+    # output query if relevant
+    if("tbl_sql" %in% class(tmp_df)){
+      save_to_sql(tmp_df %>% dbplyr::sql_render() %>% as.character(), "make count")
+    }
     
     output_df = tmp_df %>%
       dplyr::collect() %>%
@@ -235,9 +243,12 @@ summarise_and_label <- function(df,
   
   if(make_sum){
     tmp_df = df %>%
-      dplyr::summarise(sum = sum(!!sym(summarise_col), na.rm = TRUE))
+      dplyr::summarise(sum = sum(!!sym(summarise_col), na.rm = TRUE), .groups = "drop")
     
-    save_to_sql(tmp_df %>% dbplyr::sql_render() %>% as.character(), "make sum")
+    # output query if relevant
+    if("tbl_sql" %in% class(tmp_df)){
+      save_to_sql(tmp_df %>% dbplyr::sql_render() %>% as.character(), "make sum")
+    }
     
     output_df = tmp_df %>%
       dplyr::collect() %>%
@@ -333,6 +344,10 @@ summarise_and_label_over_lists <- function(df,
   }
 
   #### conclude ----
+  
+  # ensure all val columns are of type character
+  output_list = lapply(output_list, function(df){mutate(df, across(starts_with("val"), as.character))})
+  
   # list of df's into a single df
   output_df = dplyr::bind_rows(output_list)
   
@@ -374,7 +389,14 @@ apply_random_rounding <- function(df, RR_columns, BASE = 3, stable_across_cols =
       df = dplyr::mutate(df, !!sym(conf_col) := randomly_round_vector(!!sym(raw_col), base = BASE))
     } else {
       # make seeds
-      df = dplyr::mutate(df, tmp_concatenated = paste(!!!syms(stable_across_cols)))
+      sort_remove_nas = function(x){
+        x = unname(x[!is.na(x)])
+        return(paste(sort(x), collapse = " "))
+      }
+      concated = dplyr::select(df, dplyr::all_of(stable_across_cols)) %>%
+        apply(MARGIN = 1, sort_remove_nas)
+      
+      df$tmp_concatenated = concated
       df$tmp_hashed = sapply(df$tmp_concatenated, digest::digest)  
       df = dplyr::mutate(df, tmp_seed = digest::digest2int(tmp_hashed))
       # round
@@ -385,6 +407,85 @@ apply_random_rounding <- function(df, RR_columns, BASE = 3, stable_across_cols =
     
   } # end for loop
 
+  return(df)
+}
+
+## apply graduated random rounding --------------------------------------------
+#'
+#' Applied graduated random rounding (GRR) to specified columns.
+#' Creates raw_ and conf_ columns so original values are preserved.
+#' 
+#' If stable_across_cols are provided, then these will be used to generate
+#' seeds for random rounding to ensure that rounding is stable between 
+#' repeated use of this function. Increases run time.
+#' 
+#' Thresholds for graduation are set by the Stats NZ microdata output guide.
+#' Only apply one of GRR or RR3. Applyng both will cause errors.
+#' 
+apply_graduated_random_rounding <- function(df, GRR_columns, stable_across_cols = NULL){
+  # checks
+  assert(is.data.frame(df) | dplyr::is.tbl(df), "input [df] must be of type data.frame")
+  assert(all(GRR_columns %in% colnames(df)), "[GRR_columns] must be column names of [df]")
+  # check stable_across_cols if provided
+  if(!is.null(stable_across_cols)){
+    assert(all(stable_across_cols %in% colnames(df)), "[stable_across_cols] must be column names of [df]")
+    assert(!any(stable_across_cols %in% GRR_columns), "[stable_across_cols] should not be found in [GRR_columns]")
+  }
+  
+  # loop through column types
+  for(this_col in GRR_columns){
+    # value for this iteration
+    raw_col = paste0("raw_", this_col)
+    conf_col = paste0("conf_", this_col)
+    
+    # make raw_* column
+    df = dplyr::rename(df, !!sym(raw_col) := !!sym(this_col))
+    # make conf_* column
+    if(is.null(stable_across_cols)){
+      # round
+      df = dplyr::mutate(df, !!sym(conf_col) := case_when(
+        0 <= abs(!!sym(raw_col)) & abs(!!sym(raw_col)) < 19 ~ 
+          randomly_round_vector(!!sym(raw_col), base = 3),
+        19 <= abs(!!sym(raw_col)) & abs(!!sym(raw_col)) < 20 ~ 
+          randomly_round_vector(!!sym(raw_col), base = 2),
+        20 <= abs(!!sym(raw_col)) & abs(!!sym(raw_col)) < 100 ~ 
+          randomly_round_vector(!!sym(raw_col), base = 5),
+        100 <= abs(!!sym(raw_col)) & abs(!!sym(raw_col)) < 1000 ~ 
+          randomly_round_vector(!!sym(raw_col), base = 10),
+        1000 <= abs(!!sym(raw_col)) ~ 
+          randomly_round_vector(!!sym(raw_col), base = 100)
+      ))
+    } else {
+      # make seeds
+      sort_remove_nas = function(x){
+        x = unname(x[!is.na(x)])
+        return(paste(sort(x), collapse = " "))
+      }
+      concated = dplyr::select(df, dplyr::all_of(stable_across_cols)) %>%
+        apply(MARGIN = 1, sort_remove_nas)
+      
+      df$tmp_concatenated = concated
+      df$tmp_hashed = sapply(df$tmp_concatenated, digest::digest)  
+      df = dplyr::mutate(df, tmp_seed = digest::digest2int(tmp_hashed))
+      # round
+      df = df %>%
+        dplyr::mutate(!!sym(conf_col) := case_when(
+          0 <= abs(!!sym(raw_col)) & abs(!!sym(raw_col)) < 19 ~ 
+            randomly_round_vector(!!sym(raw_col), base = 3, seeds = tmp_seed),
+          19 <= abs(!!sym(raw_col)) & abs(!!sym(raw_col)) < 20 ~ 
+            randomly_round_vector(!!sym(raw_col), base = 2, seeds = tmp_seed),
+          20 <= abs(!!sym(raw_col)) & abs(!!sym(raw_col)) < 100 ~ 
+            randomly_round_vector(!!sym(raw_col), base = 5, seeds = tmp_seed),
+          100 <= abs(!!sym(raw_col)) & abs(!!sym(raw_col)) < 1000 ~ 
+            randomly_round_vector(!!sym(raw_col), base = 10, seeds = tmp_seed),
+          1000 <= abs(!!sym(raw_col)) ~ 
+            randomly_round_vector(!!sym(raw_col), base = 100, seeds = tmp_seed)
+        )) %>%
+        select(-tmp_concatenated, -tmp_seed, -tmp_hashed)
+    }
+    
+  } # end for loop
+  
   return(df)
 }
 
@@ -485,7 +586,10 @@ confidentialise_results <- function(df,
       count_col = dplyr::sym(count_cols[ii])
       num_col = dplyr::sym(num_cols[ii])
       
+      # if raw >= threshold and conf < threshold, enforce rounding down so conf >= threshold
       df = dplyr::mutate(df, !!num_col := ifelse(!!num_col < SUM_THRESHOLD & !!count_col >= SUM_THRESHOLD, !!num_col + BASE, !!num_col))
+      # if raw < threshold and conf >= threshold, enforce rounding down so conf < threshold
+      df = dplyr::mutate(df, !!num_col := ifelse(!!num_col >= SUM_THRESHOLD & !!count_col < SUM_THRESHOLD, !!num_col - BASE, !!num_col))
     }
   }
   
