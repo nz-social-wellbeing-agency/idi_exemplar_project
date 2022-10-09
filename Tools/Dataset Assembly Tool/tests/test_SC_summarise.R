@@ -190,7 +190,7 @@ test_that("individual summarise remove NA from groups", {
                             rownum = 1:100,
                             values = rep(c(0,0,NA,1,2), 20))
   expected_output_NA = tibble::tibble(col01 = rep("values", 4),
-                                      val01 = c(0,1,2,NA),
+                                      val01 = c("0","1","2",NA),
                                       summarised_var = rep("rownum", 4),
                                       sum = c(1960,1030,1050,1010))
   expected_output_none = dplyr::filter(expected_output_NA, !is.na(val01))
@@ -380,4 +380,32 @@ test_that("input checks stop execution", {
   expect_error(summarise_and_label_over_lists(input_df, group_by_list, list("rownum", 3), TRUE, TRUE, TRUE, "none"), "character")
   expect_error(summarise_and_label_over_lists(input_df, list("my_label", "not col"), summarise_list, TRUE, TRUE, TRUE, "none"), "column")
   expect_error(summarise_and_label_over_lists(input_df, group_by_list, list("rownum", "not col"), TRUE, TRUE, TRUE, "none"), "column")
+})
+
+test_that("different input types merge", {
+  input_df = tibble::tibble(
+    c1 = c("a","b","a","b"),
+    c2 = c(1.0, 1.0, 2.5, 2.5),
+    c3 = c(9, 8, 7, 6)
+  )
+  group_by_list = list("c1", "c2")
+  summarise_list = list("c3")
+  
+  expected_output = tibble::tibble(
+    col01 = c("c1", "c1", "c2", "c2"),
+    val01 = c("a", "b", "1", "2.5"),
+    summarised_var = c("c3", "c3", "c3", "c3"),
+    sum = c(16, 14, 17, 13)
+  )
+  
+  actual_output = summarise_and_label_over_lists(
+    df = input_df,
+    group_by_list = group_by_list,
+    summarise_list = summarise_list,
+    make_distinct = FALSE,
+    make_count = FALSE,
+    make_sum = TRUE
+  )
+  
+  expect_true(all_equal(actual_output, expected_output, ignore_row_order = TRUE, ignore_col_order = TRUE))
 })
