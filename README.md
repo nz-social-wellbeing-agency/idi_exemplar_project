@@ -5,7 +5,15 @@ An end-to-end example IDI research project for training and encouraging good pra
 New Zealand’s Integrated Data Infrastructure (IDI) enables incredible research opportunities. However, it can be an intimidating environment to work in for unfamiliar researchers. This exemplar guides new researchers to the IDI through a simple end-to-end project - focused on the practical aspects of managing a project and manipulating the data. The project reflects our current best practice, and we hope that it provides a useful guide for researchers to learn from.
 
 ## Reference material
-This repository provides the code and working files for the exemplar project. It should be used alongside the guidance document: **IDI exemplar project: Guidance and training**. This contains a description of the project and guides a new research through the project steps. We have also included a range of tips to help researchers develop good practices in the IDI.
+This repository provides the code and working files for the exemplar project. It should be used alongside the guidance document: [IDI exemplar project: Guidance and training](https://swa.govt.nz/assets/Publications/guidance/IDI-Exemplar-project-guide.pdf). This contains a description of the project and guides a new research through the project steps. We have also included a range of tips to help researchers develop good practices in the IDI.
+
+The exemplar project includes demonstrations of our R tools for assembling, summarising, confidentialising, and checking. While you can follow the exemplar project without using any of these tools, they improve the efficiency of our delivery, and hence we recommend them to other researchers. Reference material on these tools can be found on the Agency's guidance page ([here](https://swa.govt.nz/publications/guidance/)). Key references for these  are as follows:
+* [Assembly tool primer and guide](https://swa.govt.nz/assets/Publications/guidance/Introduction-to-the-Dataset-Assembly-tool-primer-and-guide.pdf)
+* [Assembly tool intro and training](https://swa.govt.nz/assets/Publications/guidance/Dataset-Assembly-Tool-introduction-and-training-presentation.pdf)
+* [Assembly tool training presentation](https://vimeo.com/490565559)
+* [Assembly tool demonstration](https://vimeo.com/561152732/435a570079)
+* [Summarise and confidentialise training](https://swa.govt.nz/assets/Publications/guidance/summarise-and-confidentialise-tools-training-guide-v2.pdf)
+* [Self-checking tools training](https://swa.govt.nz/assets/Publications/guidance/self-checking-tools-training-guide.pdf)
 
 ## Versions
 The exemplar can be downloaded as a zip file from GitHub. We also will aim to make a version of the exemplar available inside the data lab.
