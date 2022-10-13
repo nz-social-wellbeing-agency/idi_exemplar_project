@@ -60,6 +60,11 @@ income_summary_conf = mutate(
   conf_sum = as.numeric(conf_sum)
 )
 
+#### drop 'x' column from row numbers
+# skip if data does not contain row numbers
+age_summary_conf = select(age_summary_conf, -X)
+income_summary_conf = select(income_summary_conf, -X)
+
 #### rounding to base 3
 check_rounding_to_base_df(age_summary_conf, "conf_count")
 check_rounding_to_base_df(income_summary_conf, "conf_count")
@@ -75,8 +80,14 @@ check_small_count_suppression(income_summary_conf, suppressed_col = "conf_sum", 
 
 #### check zero counts handled consistent with 1-5 counts
 # May not pass as we know every region does not have every type of urban/rural area
-check_absence_of_zero_counts(age_summary_conf, "counf_count")
-check_absence_of_zero_counts(income_summary_conf, "counf_count")
+check_absence_of_zero_counts(age_summary_conf, "conf_count")
+check_absence_of_zero_counts(income_summary_conf, "conf_count")
+
+# View some of the missing rows
+check_absence_of_zero_counts(age_summary_conf, "conf_count", print_on_fail = TRUE)
+check_absence_of_zero_counts(income_summary_conf, "conf_count", print_on_fail = TRUE)
+# Only some rows that cause failure are returned
+# So just viewing these missing rows is not sufficient to be confident data is safe
 
 
 ## check prepared files are ready for submission --------------------------------------------------
@@ -148,3 +159,4 @@ check_small_count_suppression(age_w_raw, suppressed_col = "num", threshold = 6, 
 # this example will error as we have changed output format
 check_absence_of_zero_counts(income_safe, "counf_count")
 check_absence_of_zero_counts(age_safe, "counf_count")
+# proceed to manual check
