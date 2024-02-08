@@ -12,19 +12,26 @@ To compress large tables to reduce space:
 USE IDI_Sandpit
 GO
 
-SELECT s.Name AS schmeaname
-	,t.NAME AS tablename
-	,p.rows AS rowcounts
-	,SUM(a.total_pages) * 8 AS totalspaceKB
-FROM sys.tables t
-INNER JOIN sys.indexes i ON t.OBJECT_ID = i.object_id
-INNER JOIN sys.partitions p ON i.object_id = p.object_id AND i.index_id = p.index_id
-INNER JOIN sys.allocation_units a ON p.partition_id = a.container_id
-LEFT OUTER JOIN sys.schemas s on t.schema_id = s.schema_id
-WHERE
-t.name not like 'dt%'
-and t.is_ms_shipped = 0
-and i.object_id > 255
---and s.name = 'DL-MAA20YY-XX' /* optional filter to single schema */
-group by t.name, s.name, p.rows, t.create_date, t.modify_date
-order by s.name, t.name
+SELECT s.Name AS schema_name
+	,t.NAME AS table_name
+	,t.create_date
+	,t.modify_date
+	,p.rows AS row_count
+	,8 * SUM(a.total_pages) AS total_space_KB
+	,8.0 * SUM(a.total_pages) / 1024.0 / 1024 AS total_space_GB
+FROM sys.tables AS t
+INNER JOIN sys.indexes AS i
+ON t.OBJECT_ID = i.OBJECT_ID
+INNER JOIN sys.partitions AS p
+ON i.OBJECT_ID = p.OBJECT_ID
+AND i.index_id = p.index_id
+INNER JOIN sys.allocation_units AS a
+ON p.partition_id = a.container_id
+LEFT OUTER JOIN sys.schemas AS s
+ON t.schema_id = s.schema_id
+WHERE t.name NOT LIKE 'dt%'
+AND t.is_ms_shipped = 0
+AND i.object_id > 255
+-- AND s.NAME = 'DL-MAA20XX-YY' /* optional filter to just schema of interest */
+GROUP BY s.name, t.name, p.rows, t.create_date, t.modify_date
+ORDER BY s.name, t.name
