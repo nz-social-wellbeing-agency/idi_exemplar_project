@@ -1,4 +1,0 @@
-age summary.csv
-age confidentialised.csv
-income summary.csv
-income confidentialised.csv
